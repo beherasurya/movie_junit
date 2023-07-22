@@ -21,7 +21,7 @@ public class MovieRepositoryTest {
     MovieRepository movieRepository;
 
     @Test
-    @DisplayName("It should save the movie details in database")
+    @DisplayName("Save Movie")
     void save(){
 
         //Arrange
@@ -40,7 +40,7 @@ public class MovieRepositoryTest {
     }
 
     @Test
-    @DisplayName("Movies list with size")
+    @DisplayName("Display all Movie")
     void getAllMovies(){
 
          Movies avatarMovie= new Movies();
@@ -85,6 +85,62 @@ public class MovieRepositoryTest {
         assertEquals("Romance", existingMovie.getGenera(), "It will check Genera is same or not");
 
 
+
+    }
+
+    @Test
+    @DisplayName("Update Movie")
+    void updateMovie(){
+
+        Movies titanicMovie= new Movies();
+        titanicMovie.setName("Titanic");
+
+        titanicMovie.setGenera("Romance");
+        titanicMovie.setReleaseDate(LocalDate.of(1999, Month.AUGUST, 31));
+
+        movieRepository.save(titanicMovie);
+        Movies existingMovie = movieRepository.findById(titanicMovie.getId()).get();
+
+        existingMovie.setGenera("Adventure");
+        movieRepository.save(existingMovie);
+
+        assertEquals("Titanic", existingMovie.getName());
+        assertEquals("Adventure", existingMovie.getGenera());
+
+       
+    }
+
+    @Test
+    @DisplayName("Delete Movie")
+    void deleteMovie(){
+
+        Movies titanicMovie= new Movies();
+        titanicMovie.setName("Titanic");
+
+        titanicMovie.setGenera("Romance");
+        titanicMovie.setReleaseDate(LocalDate.of(1999, Month.AUGUST, 31));
+
+        
+        movieRepository.save(titanicMovie);
+        Movies movie = movieRepository.findById(titanicMovie.getId()).get();
+
+        Movies avengerMovie= new Movies();
+        titanicMovie.setName("Avenger");
+
+        titanicMovie.setGenera("Action");
+        titanicMovie.setReleaseDate(LocalDate.of(2021, Month.JULY, 11));
+
+        movieRepository.save(avengerMovie);
+        List<Movies> beforeDeleteList = movieRepository.findAll();
+
+        
+        assertEquals(2,beforeDeleteList.size());
+        movieRepository.deleteById(movie.getId());
+
+         List<Movies> afterDeleteList = movieRepository.findAll();
+         assertEquals( 1, afterDeleteList.size());
+
+        
 
     }
 }
